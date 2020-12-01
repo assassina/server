@@ -19,6 +19,9 @@
 //////////////////////////////////////////////////////////////////////
 
 #ifndef __OTSERV_DEFINITIONS_H__
+
+typedef bool my_bool; //workaround for newest versions of mysql not having the type my_bool anymore
+
 #define __OTSERV_DEFINITIONS_H__
 
 #define OTSERV_VERSION "0.6.4_SVN"
