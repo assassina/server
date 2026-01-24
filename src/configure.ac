@@ -12,11 +12,11 @@ AC_PROG_CXX
 AC_LANG(C++)
 
 # check if we want debuging
-AC_ARG_ENABLE(debug, [  --enable-debug      enable debuging], 
+AC_ARG_ENABLE(debug, [  --enable-debug      enable debuging],
 	[DEBUG_FLAGS="-D__DEBUG__MOVESYS__ -D__DEBUG_HOUSES__ -D__DEBUG_MAILBOX__ -D__DEBUG_LUASCRIPTS__ -D__DEBUG_NET__"]
 )
 # check if we want verbose debuging
-AC_ARG_ENABLE(net-debug, [  --enable-net-debug  enable verbose net debuging], 
+AC_ARG_ENABLE(net-debug, [  --enable-net-debug  enable verbose net debuging],
     [DEBUG_FLAGS="$DEBUG_FLAGS -D__DEBUG_NET_DETAIL__"]
 )
 AC_SUBST(DEBUG_FLAGS)
@@ -92,7 +92,7 @@ AC_SUBST(PROFILER_FLAGS)
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([arpa/inet.h netdb.h netinet/in.h stddef.h stdint.h stdlib.h sys/socket.h sys/timeb.h])
+AC_CHECK_HEADERS([arpa/inet.h netdb.h netinet/in.h stddef.h stdint.h stdlib.h sys/socket.h time.h sys/timeb.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -113,7 +113,11 @@ AC_CHECK_TYPES([ptrdiff_t])
 AC_FUNC_MALLOC
 AC_FUNC_MEMCMP
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([floor ftime gethostbyname gethostname memset pow sqrt strcasecmp strncasecmp strstr strtol])
+AC_CHECK_FUNCS([floor gethostbyname gethostname memset pow sqrt strcasecmp strncasecmp strstr strtol])
+
+#checks for clock_gettime (at libc or librt)
+AC_SEARCH_LIBS([clock_gettime], [rt])
+AC_CHECK_FUNCS([clock_gettime])
 
 # check for libxml2
 AM_PATH_XML2(2.6.5, , AC_MSG_ERROR([you need libxml2 >= 2.6.5 to compile otserv!]))
@@ -197,7 +201,7 @@ if test -n "$MYSQL_FLAGS"; then
 fi
 
 # check for postgresql if it is enabled
-if test -n "$PGSQL_FLAGS"; then 
+if test -n "$PGSQL_FLAGS"; then
 	AC_CHECK_HEADERS([postgresql/libpq-fe.h],[/usr/include/libpq-fe.h],[PGSQL_LIBS=-lpg],[AC_MSG_ERROR("postgresql headers missing.")])
 	AC_CHECK_LIB(pq, main,[],[AC_MSG_ERROR("Linking against libpq failed.")])
 	AC_SUBST(PGSQL_LIBS)
@@ -211,7 +215,7 @@ if test -n "$ODBC_FLAGS"; then
 fi
 
 # check for sqlite if it is enabled
-if test -n "$SQLITE_FLAGS"; then 
+if test -n "$SQLITE_FLAGS"; then
 	AC_CHECK_HEADERS([sqlite3.h],[SQLITE_LIBS=-lsqlite3],[AC_MSG_ERROR("sqlite3 headers missing.")])
 	AC_CHECK_LIB(sqlite3, main,[],[AC_MSG_ERROR("Linking against sqlite3 failed.")])
 	AC_SUBST(SQLITE_LIBS)

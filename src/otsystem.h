@@ -23,15 +23,34 @@
 #define __OTSERV_OTSYSTEM_H__
 
 #include "definitions.h"
+#include "config.h"
 
-#include <sys/types.h>
+#ifdef HAVE_TIME_H
+#include <time.h>
+#endif
+
+#ifdef HAVE_SYS_TIMEB_H
 #include <sys/timeb.h>
+#endif
+
 
 inline int64_t OTSYS_TIME()
 {
-	timeb t;
-	ftime(&t);
-	return int64_t(t.millitm) + int64_t(t.time) * 1000;
+#ifdef HAVE_CLOCK_GETTIME
+
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    return int64_t(ts.tv_sec) * 1000 + int64_t(ts.tv_nsec) / 1000000;
+
+#elif defined(HAVE_FTIME)
+
+    struct timeb t;
+    ftime(&t);
+    return (int64_t)t.time * 1000 + t.millitm;
+
+#else
+    #error "No suitable time function available"
+#endif
 }
 
 #endif
