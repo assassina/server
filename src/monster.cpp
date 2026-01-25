@@ -521,10 +521,10 @@ BlockType_t Monster::blockHit(Creature* attacker, CombatType_t combatType, int32
 
 		if(elementMod != 0)
 			damage = (int32_t)std::ceil(damage * ((float)(100 - elementMod) / 100));
-			if(damage <= 0){
-				damage = 0;
-				blockType = BLOCK_DEFENSE;
-			}
+        if(damage <= 0){
+            damage = 0;
+            blockType = BLOCK_DEFENSE;
+        }
 	}
 
 	return blockType;
