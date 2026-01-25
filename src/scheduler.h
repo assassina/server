@@ -24,7 +24,7 @@
 #include "definitions.h"
 #include "tasks.h"
 #include "otsystem.h"
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <vector>
 #include <queue>
 #include <set>

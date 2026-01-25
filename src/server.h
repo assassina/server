@@ -22,7 +22,7 @@
 #define __OTSERV_SERVER_H__
 
 #include "definitions.h"
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/utility.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -143,7 +143,7 @@ bool ServiceManager::add(uint16_t port)
 	}
 	ServicePort_ptr service_port;
 
-	std::map<uint16_t, ServicePort_ptr>::iterator finder = 
+	std::map<uint16_t, ServicePort_ptr>::iterator finder =
 		m_acceptors.find(port);
 
 	if(finder == m_acceptors.end()){
@@ -154,8 +154,8 @@ bool ServiceManager::add(uint16_t port)
 	else{
 		service_port = finder->second;
 		if(service_port->is_single_socket() || ProtocolType::server_sends_first){
-			std::cout << "ERROR: " << ProtocolType::protocol_name() << 
-				" and " << service_port->get_protocol_names() << 
+			std::cout << "ERROR: " << ProtocolType::protocol_name() <<
+				" and " << service_port->get_protocol_names() <<
 				" cannot use the same port " << port << "." << std::endl;
 			return false;
 		}

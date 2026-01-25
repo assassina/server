@@ -183,7 +183,7 @@ void OutputMessagePool::internalReleaseMessage(OutputMessage* msg)
 #ifdef __TRACK_NETWORK__
 	msg->clearTrack();
 #endif
-	
+
 	m_outputPoolLock.lock();
 	m_outputMessages.push_back(msg);
 	m_outputPoolLock.unlock();
@@ -220,7 +220,7 @@ OutputMessage_ptr OutputMessagePool::getOutputMessage(Protocol* protocol, bool a
 
 	OutputMessage_ptr outputmessage;
 	outputmessage.reset(m_outputMessages.back(),
-		boost::bind(&OutputMessagePool::releaseMessage, this, _1));
+		boost::bind(&OutputMessagePool::releaseMessage, this, boost::placeholders::_1));
 
 	m_outputMessages.pop_back();
 

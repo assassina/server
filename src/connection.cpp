@@ -31,7 +31,7 @@
 #include "protocolold.h"
 #include "admin.h"
 #include "status.h"
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 bool Connection::m_logError = true;
 

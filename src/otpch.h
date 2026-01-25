@@ -20,7 +20,7 @@
 //boost
 #include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
+//#include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/regex.hpp>

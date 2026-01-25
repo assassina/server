@@ -46,7 +46,7 @@
 #include "movement.h"
 #include "guild.h"
 #include <boost/config.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <string>
 #include <sstream>
 #include <map>
