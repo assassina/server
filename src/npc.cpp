@@ -30,11 +30,13 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <algorithm>
+#include <random>
 #include <functional>
 #include <string>
 #include <sstream>
 #include <fstream>
 
+extern std::mt19937 randomGeneratorVar;
 extern ConfigManager g_config;
 extern Game g_game;
 extern Spells* g_spells;
@@ -2329,7 +2331,7 @@ bool Npc::getRandomStep(Direction& dir)
 	}
 
 	if(!dirList.empty()){
-		std::random_shuffle(dirList.begin(), dirList.end());
+		std::shuffle(dirList.begin(), dirList.end(), randomGeneratorVar);
 		dir = dirList[random_range(0, dirList.size() - 1)];
 		return true;
 	}

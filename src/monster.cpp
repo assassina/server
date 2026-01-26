@@ -31,10 +31,12 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <random>
 
 extern Game g_game;
 extern ConfigManager g_config;
 extern Monsters g_monsters;
+extern std::mt19937 randomGeneratorVar;
 
 AutoList<Monster>Monster::listMonster;
 
@@ -946,7 +948,7 @@ bool Monster::pushItem(Item* item, int32_t radius)
 	relList.push_back(relPair(1, 0));
 	relList.push_back(relPair(1, 1));
 
-	std::random_shuffle(relList.begin(), relList.end());
+	std::shuffle(relList.begin(), relList.end(), randomGeneratorVar);
 
 	Position tryPos;
 	for(int32_t n = 1; n <= radius; ++n){
@@ -1011,7 +1013,7 @@ bool Monster::pushCreature(Creature* creature)
 	dirList.push_back(WEST);
 	dirList.push_back(EAST);
 
-	std::random_shuffle(dirList.begin(), dirList.end());
+	std::shuffle(dirList.begin(), dirList.end(), randomGeneratorVar);
 
 	for(std::vector<Direction>::iterator it = dirList.begin(); it != dirList.end(); ++it){
 		const Position& tryPos = Spells::getCasterPosition(creature, *it);
@@ -1124,7 +1126,7 @@ bool Monster::getRandomStep(const Position& creaturePos, Direction& dir)
 	dirList.push_back(SOUTH);
 	dirList.push_back(WEST);
 	dirList.push_back(EAST);
-	std::random_shuffle(dirList.begin(), dirList.end());
+	std::shuffle(dirList.begin(), dirList.end(), randomGeneratorVar);
 
 	for(std::vector<Direction>::iterator it = dirList.begin(); it != dirList.end(); ++it){
 		if(canWalkTo(creaturePos, *it)){
@@ -1201,7 +1203,7 @@ bool Monster::getDanceStep(const Position& creaturePos, Direction& dir,
 	}
 
 	if(!dirList.empty()){
-		std::random_shuffle(dirList.begin(), dirList.end());
+		std::shuffle(dirList.begin(), dirList.end(), randomGeneratorVar);
 		dir = dirList[random_range(0, dirList.size() - 1)];
 		return true;
 	}

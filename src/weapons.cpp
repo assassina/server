@@ -26,7 +26,10 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <sstream>
+#include <algorithm>
+#include <random>
 
+extern std::mt19937 randomGeneratorVar;
 extern Game g_game;
 extern Vocations g_vocations;
 extern ConfigManager g_config;
@@ -958,7 +961,7 @@ bool WeaponDistance::useWeapon(Player* player, Item* item, Creature* target) con
 			destList.push_back(std::make_pair(1, 0));
 			destList.push_back(std::make_pair(1, 1));
 
-			std::random_shuffle(destList.begin(), destList.end());
+			std::shuffle(destList.begin(), destList.end(), randomGeneratorVar);
 
 			Position destPos = target->getPosition();
 			Tile* tmpTile = NULL;

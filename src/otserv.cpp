@@ -32,6 +32,8 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
+#include <random>
+#include <algorithm>
 
 #if !defined(__WINDOWS__)
 	#include <unistd.h> // for access()
@@ -63,6 +65,9 @@
 #include "allocator.h"
 #endif
 
+
+std::random_device randomDeviceVar;
+std::mt19937 randomGeneratorVar(randomDeviceVar());
 
 Game g_game;
 Dispatcher g_dispatcher;

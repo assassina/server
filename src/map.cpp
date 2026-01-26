@@ -37,8 +37,10 @@
 #include <sstream>
 #include <map>
 #include <algorithm>
+#include <random>
 
 extern ConfigManager g_config;
+extern std::mt19937 randomGeneratorVar;
 
 Map::Map()
 {
@@ -230,7 +232,7 @@ bool Map::placeCreature(const Position& centerPos, Creature* creature, bool exte
 		relPosList.push_back(std::make_pair(0, 2));
 		relPosList.push_back(std::make_pair(2, 0));
 
-		std::random_shuffle(relPosList.begin(), relPosList.end());
+		std::shuffle(relPosList.begin(), relPosList.end(), randomGeneratorVar);
 	}
 
 	relPosList.push_back(std::make_pair(-1, -1));
@@ -242,7 +244,7 @@ bool Map::placeCreature(const Position& centerPos, Creature* creature, bool exte
 	relPosList.push_back(std::make_pair(1, 0));
 	relPosList.push_back(std::make_pair(1, 1));
 
-	std::random_shuffle(relPosList.begin() + (extendedPos? 4 : 0), relPosList.end());
+	std::shuffle(relPosList.begin() + (extendedPos? 4 : 0), relPosList.end(), randomGeneratorVar);
 	uint32_t radius = 1;
 
 	Position tryPos;
