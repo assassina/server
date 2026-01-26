@@ -66,7 +66,7 @@ inline SchedulerTask* createSchedulerTask(uint32_t delay, const boost::function<
 	return new SchedulerTask(delay, f);
 }
 
-class lessSchedTask : public std::binary_function<SchedulerTask*&, SchedulerTask*&, bool>
+class lessSchedTask
 {
 public:
 	bool operator()(SchedulerTask*& t1, SchedulerTask*& t2)
