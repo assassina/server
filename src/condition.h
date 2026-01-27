@@ -305,7 +305,7 @@ public:
 	{
 		return damageList.size();
 	}
-	
+
 	IntervalInfo popBackDamage() {
 		IntervalInfo info = damageList.back();
 		damageList.pop_back();
@@ -343,7 +343,7 @@ protected:
 
 	bool getNextDamage(int32_t& damage);
 	bool doDamage(Creature* creature, int32_t damage);
-	bool updateCondition(const ConditionDamage* addCondition);
+	virtual bool updateCondition(const Condition* addCondition);
 };
 
 class ConditionSpeed: public Condition

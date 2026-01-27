@@ -1428,9 +1428,11 @@ void ConditionDamage::endCondition(Creature* creature, ConditionEnd_t reason)
 	//
 }
 
-bool ConditionDamage::updateCondition(const ConditionDamage* addCondition)
+bool ConditionDamage::updateCondition(const Condition* addCondition)
 {
-	if(addCondition->doForceUpdate()){
+	const ConditionDamage *addConditionDamage = addCondition->getDamageCondition();
+
+	if(addConditionDamage && (addConditionDamage->doForceUpdate())){
 		return true;
 	}
 
@@ -1442,24 +1444,26 @@ bool ConditionDamage::updateCondition(const ConditionDamage* addCondition)
 		return false;
 	}
 
-	int32_t oldTotDamage = getTotalDamage();
-	int32_t newTotDamage = addCondition->getTotalDamage();
+	if (addConditionDamage){
+		int32_t oldTotDamage = getTotalDamage();
+		int32_t newTotDamage = addConditionDamage->getTotalDamage();
 
-	//TODO: to consider the PVP damage reduction to correctly decide which condition should stay?
-	/*if ((owner >= PLAYER_ID_RANGE) && (owner < MONSTER_ID_RANGE)){ //we shouldn't check attacker because pvp reduction happens even if the creature who owns the condition is dead
-		Combat::doPVPDamageReduction(oldTotDamage, ?);
-	}
+		//TODO: to consider the PVP damage reduction to correctly decide which condition should stay?
+		/*if ((owner >= PLAYER_ID_RANGE) && (owner < MONSTER_ID_RANGE)){ //we shouldn't check attacker because pvp reduction happens even if the creature who owns the condition is dead
+			Combat::doPVPDamageReduction(oldTotDamage, ?);
+		}
 
-	if ((addCondition->owner >= PLAYER_ID_RANGE) && (addCondition->owner < MONSTER_ID_RANGE)){ //we shouldn't check attacker because pvp reduction happens even if the creature who owns the condition is dead
-		Combat::doPVPDamageReduction(newTotDamage, ?);
-	}*/
+		if ((addCondition->owner >= PLAYER_ID_RANGE) && (addCondition->owner < MONSTER_ID_RANGE)){ //we shouldn't check attacker because pvp reduction happens even if the creature who owns the condition is dead
+			Combat::doPVPDamageReduction(newTotDamage, ?);
+		}*/
 
-	if(newTotDamage < oldTotDamage){
-		return false;
-	}
+		if(newTotDamage < oldTotDamage){
+			return false;
+		}
 
-	if(addCondition->periodDamage < periodDamage){
-		return false;
+		if(addConditionDamage->periodDamage < periodDamage){
+			return false;
+		}
 	}
 
 	return true;
