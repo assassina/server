@@ -39,7 +39,6 @@ typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
 
 enum DistributionType_t {
 	DISTRO_UNIFORM,
-	DISTRO_SQUARE,
 	DISTRO_NORMAL
 };
 
@@ -140,9 +139,7 @@ std::vector<std::string> explodeString(const std::string& inString, const std::s
 bool hasBitSet(uint32_t flag, uint32_t flags);
 bool safeIncrUInt32_t(uint32_t &x, uint32_t incr);
 
-uint32_t rand24b();
-float box_muller(float m, float s);
-
+int randomNumberInNormalDistribution(float average, float deviation);
 int random_range(int lowest_number, int highest_number, DistributionType_t type = DISTRO_UNIFORM, float deviation = 0.25);
 
 int64_t roundUpOrDown(double v, bool roundUp);

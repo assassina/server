@@ -29,10 +29,13 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <random>
 #include <limits>
 #include <boost/algorithm/string/predicate.hpp>
 
+extern std::mt19937 randomGeneratorVar;
 extern ConfigManager g_config;
+extern void ErrorMessage(const char* message);
 
 void replaceString(std::string& str, const std::string sought, const std::string replacement)
 {
@@ -219,44 +222,10 @@ bool safeIncrUInt32_t(uint32_t& x, uint32_t incr)
     return false;
 }
 
-#define RAND_MAX24 16777216
-uint32_t rand24b()
+int randomNumberInNormalDistribution(float average, float deviation)
 {
-	return ((rand() << 12) ^ ((rand()) & (0xFFFFFF)) );
-}
-
-float box_muller(float m, float s)
-{
-	// normal random variate generator
-	// mean m, standard deviation s
-
-	float x1, x2, w, y1;
-	static float y2;
-	static int use_last = 0;
-
-	if(use_last)			// use value from previous call
-	{
-		y1 = y2;
-		use_last = 0;
-	}
-	else
-	{
-		do {
-			double r1 = (((float)(rand()) / RAND_MAX));
-			double r2 = (((float)(rand()) / RAND_MAX));
-
-			x1 = 2.0 * r1 - 1.0;
-			x2 = 2.0 * r2 - 1.0;
-			w = x1 * x1 + x2 * x2;
-		} while ( w >= 1.0 );
-
-		w = sqrt( (-2.0 * log( w ) ) / w );
-		y1 = x1 * w;
-		y2 = x2 * w;
-		use_last = 1;
-	}
-
-	return( m + y1 * s );
+    std::normal_distribution<float> dist(average, deviation);
+    return dist(randomGeneratorVar);
 }
 
 int random_range(int lowest_number, int highest_number, DistributionType_t type /*= DISTRO_UNIFORM*/, float deviation /*= 0.25*/)
@@ -266,31 +235,24 @@ int random_range(int lowest_number, int highest_number, DistributionType_t type 
 	}
 
 	if(lowest_number > highest_number){
-		int nTmp = highest_number;
-		highest_number = lowest_number;
-		lowest_number = nTmp;
+		std::swap(lowest_number, highest_number);
 	}
 
-	int range = highest_number - lowest_number;
-
-	if(type == DISTRO_UNIFORM){
-		int r = rand24b() % (range + 1);
-		return lowest_number + r;
+	if (type == DISTRO_UNIFORM) {
+		std::uniform_int_distribution<int> dist(lowest_number, highest_number);
+		return dist(randomGeneratorVar);
 	}
-	else if(type == DISTRO_NORMAL){
-		float value = box_muller(0.5, deviation);
-
-		if(value < 0){
-			value = 0;
-		}else if(value > 1){
-			value = 1;
-		}
-
-		return lowest_number + (int)((float)range * value);
+	else if (type == DISTRO_NORMAL) {
+		float range = static_cast<float>(highest_number - lowest_number);
+		float average = static_cast<float>(highest_number + lowest_number)/2.0f;
+		float actual_deviation = deviation * range; //adjust the deviation accordingly to range
+		int value = int(std::round(randomNumberInNormalDistribution(average, actual_deviation)));
+		value = std::max(lowest_number, std::min(highest_number, value));
+		return value;
 	}
 	else{
-		float r = 1.f - sqrt((1.f*rand24b())/RAND_MAX24);
-		return lowest_number + (int)((float)range * r);
+		ErrorMessage("Invalid distribution type at random_range!");
+		exit(-1);
 	}
 }
 
